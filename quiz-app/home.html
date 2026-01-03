@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task 3 - Quiz Application </title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Task 3 : Quiz Application </h1>
+    <p>Enter your name:</p>
+    <input type="text" id="username" placeholder="Your name" style="padding:8px; width:80%; border-radius:5px; border:1px solid #ccc;">
+    <p>Select your Quiz Topic / Domain:</p>
+    <div class="btn-container">
+      <button onclick="startQuiz('java')">Java</button>
+      <button onclick="startQuiz('c')">C</button>
+      <button onclick="startQuiz('python')">Python</button>
+    </div>
+  </div>
+
+<script>
+  function startQuiz(topic) {
+    const name = document.getElementById("username").value.trim();
+    if (!name) {
+      alert("Please enter your name before starting the quiz!");
+      return;
+    }
+    localStorage.setItem("username", name); // store the username
+    if(topic === 'java') window.location.href = "java.html";
+    else if(topic === 'c') window.location.href = "c.html";
+    else if(topic === 'python') window.location.href = "python.html";
+  }
+</script>
+</body>
+</html>

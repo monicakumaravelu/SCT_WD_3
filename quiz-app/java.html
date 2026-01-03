@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Java Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="quiz-container" id="quizBox">
+    <h1>Java Quiz</h1>
+
+    <!-- Question counter -->
+    <div id="questionCounter">Question 1 of 10</div>
+
+    <!-- Progress bar -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="question-box">
+      <h2 id="question">Question text</h2>
+      <ul class="options" id="optionsList"></ul>
+    </div>
+
+    <div class="btn-container">
+      <button id="nextBtn">Next</button>
+      <button id="finishBtn" style="display:none;">Finish</button>
+    </div>
+  </div>
+
+<script>
+const quizData = [
+  { question: "Which company originally developed Java?", options: ["Microsoft", "Sun Microsystems", "Google", "Oracle"], correct: "Sun Microsystems" },
+  { question: "Which of the following is not a Java keyword?", options: ["static", "String", "try", "final"], correct: "String" },
+  { question: "Which tool is used to compile Java code?", options: ["javac", "java", "javadoc", "jar"], correct: "javac" },
+  { question: "Which method is the entry point of a Java program?", options: ["start()", "main()", "run()", "execute()"], correct: "main()" },
+  { question: "What is the default value of an int variable in Java?", options: ["0", "null", "undefined", "1"], correct: "0" },
+  { question: "Which concept allows multiple methods with the same name but different parameters?", options: ["Overloading", "Overriding", "Encapsulation", "Abstraction"], correct: "Overloading" },
+  { question: "Which keyword is used to inherit a class in Java?", options: ["super", "this", "extends", "implements"], correct: "extends" },
+  { question: "Which collection class allows duplicate elements in Java?", options: ["Set", "Map", "List", "Enum"], correct: "List" },
+  { question: "Which of the following is a wrapper class in Java?", options: ["int", "Integer", "char", "String"], correct: "Integer" },
+  { question: "Which exception is thrown when a divided by zero occurs in Java?", options: ["NullPointerException", "ArithmeticException", "ClassNotFoundException", "IOException"], correct: "ArithmeticException" }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let userAnswers = [];
+
+const questionEl = document.getElementById("question");
+const optionsList = document.getElementById("optionsList");
+const nextBtn = document.getElementById("nextBtn");
+const finishBtn = document.getElementById("finishBtn");
+const progressBar = document.getElementById("progressBar");
+const questionCounter = document.getElementById("questionCounter");
+
+// Load question and options
+function loadQuestion() {
+  const q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsList.innerHTML = "";
+  q.options.forEach(opt => {
+    const li = document.createElement("li");
+    li.innerHTML = `<label><input type="radio" name="option" value="${opt}"> ${opt}</label>`;
+    optionsList.appendChild(li);
+  });
+  updateProgress(currentQuestion, quizData.length);
+}
+
+// Get selected answer
+function getSelected() {
+  const options = document.getElementsByName("option");
+  for (let opt of options) {
+    if (opt.checked) return opt.value;
+  }
+  return null;
+}
+
+// Update progress bar and question counter
+function updateProgress(currentIndex, totalQuestions) {
+  const percent = ((currentIndex + 1) / totalQuestions) * 100;
+  progressBar.style.width = percent + "%";
+  questionCounter.textContent = `Question ${currentIndex + 1} of ${totalQuestions}`;
+}
+
+// Next button click
+nextBtn.addEventListener("click", () => {
+  const answer = getSelected();
+  if (!answer) {
+    alert("Please select an option!");
+    return;
+  }
+  userAnswers.push({question: quizData[currentQuestion].question, selected: answer, correct: quizData[currentQuestion].correct});
+  if (answer === quizData[currentQuestion].correct) score++;
+
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    if (currentQuestion === quizData.length - 1) {
+      nextBtn.style.display = "none";
+      finishBtn.style.display = "inline-block";
+    }
+  }
+});
+
+// Finish button click
+finishBtn.addEventListener("click", () => {
+  const username = localStorage.getItem("username") || "Anonymous";
+
+  // Save to leaderboard
+  const scoreData = {
+    name: username,
+    score: score,
+    total: quizData.length,
+    topic: "Java"
+  };
+  
+  let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+  leaderboard.push(scoreData);
+  leaderboard.sort((a,b) => b.score - a.score); // highest score first
+  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
+  // Store for result page
+  localStorage.setItem("score", score);
+  localStorage.setItem("total", quizData.length);
+  localStorage.setItem("answers", JSON.stringify(userAnswers));
+
+  window.location.href = "result.html";
+});
+
+// Initialize first question
+loadQuestion();
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .current-user {
+      background-color: #4f2e00b9; /* light beige highlight */
+      font-weight: bold;
+      padding: 5px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Leaderboard</h1>
+    <div id="leaderboardList"></div>
+    <div class="btn-container">
+      <button onclick="goHome()">Back to Home</button>
+    </div>
+  </div>
+
+<script>
+  const leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+  const currentUser = localStorage.getItem("username") || "";
+  const listDiv = document.getElementById("leaderboardList");
+
+  if (leaderboard.length === 0) {
+    listDiv.innerHTML = "<p>No entries yet.</p>";
+  } else {
+    leaderboard.forEach((entry, index) => {
+      const p = document.createElement("p");
+      p.textContent = `${index + 1}. ${entry.name} - ${entry.score}/${entry.total} (${entry.topic})`;
+
+      // Highlight current user
+      if (entry.name === currentUser) {
+        p.classList.add("current-user");
+      }
+
+      listDiv.appendChild(p);
+    });
+  }
+
+  function goHome() {
+    window.location.href = "home.html";
+  }
+</script>
+</body>
+</html>

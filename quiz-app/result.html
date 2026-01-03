@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Result</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz Result</h1>
+    <p id="userName"></p>
+    <p id="scoreText"></p>
+    <p id="percentageText"></p>
+    <div class="btn-container">
+      <button onclick="viewReview()">View Correct Answers</button>
+      <button onclick="goHome()">Retake Quiz</button>
+      <button onclick="viewLeaderboard()">See Leaderboard</button>
+    </div>
+  </div>
+
+<script>
+  // Load user name and score from localStorage
+  const username = localStorage.getItem("username") || "Anonymous";
+  const score = localStorage.getItem("score") || 0;
+  const total = localStorage.getItem("total") || 0;
+  const percentage = ((score / total) * 100).toFixed(2);
+
+  document.getElementById("userName").textContent = `Name: ${username}`;
+  document.getElementById("scoreText").textContent = `Score: ${score} / ${total}`;
+  document.getElementById("percentageText").textContent = `Percentage: ${percentage}%`;
+
+  function viewReview() {
+    window.location.href = "review.html";
+  }
+
+  function goHome() {
+    localStorage.clear(); // Optional: reset data for new quiz
+    window.location.href = "home.html";
+  }
+
+  function viewLeaderboard() {
+    window.location.href = "leaderboard.html";
+  }
+</script>
+</body>
+</html>
+

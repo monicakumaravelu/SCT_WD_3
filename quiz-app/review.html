@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> Answer Review</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Answer Review</h1>
+    <div class="answer-review" id="answerReview"></div>
+
+    <!-- Buttons -->
+    <div class="btn-container">
+      <button onclick="goBack()">Back to Result</button>
+      <button onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+<script>
+  // Load answers from localStorage
+  const answers = JSON.parse(localStorage.getItem("answers")) || [];
+  const reviewDiv = document.getElementById("answerReview");
+
+  answers.forEach(ans => {
+    const p = document.createElement("p");
+    if (ans.selected === ans.correct) {
+      p.innerHTML = `<span class="correct">(✔)  ${ans.question}<br> Your Answer: ${ans.selected}</span>`;
+    } else {
+      p.innerHTML = `<span class="wrong">(X) ${ans.question}<br> Your Answer: ${ans.selected}<br> Correct Answer: ${ans.correct}</span>`;
+    }
+    reviewDiv.appendChild(p);
+  });
+
+  // Go back to result page
+  function goBack() {
+    window.location.href = "result.html";
+  }
+
+  // Retake the quiz (go back to home page)
+  function retakeQuiz() {
+    localStorage.clear(); // optional: clear previous quiz data
+    window.location.href = "home.html";
+  }
+</script>
+</body>
+</html>
